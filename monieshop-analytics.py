@@ -64,25 +64,20 @@ def analyze_transaction_data(folder_path):
                     print(f"Skipping invalid line in {filename}: {line}")
                     continue
 
-                # extract relevant fields
                 day_key = text_file['transactionTime'].date()
                 year = text_file['transactionTime'].year
                 month = text_file['transactionTime'].month
                 staff_id = text_file['salesStaffId']
                 hour = text_file['transactionTime'].hour
 
-                # 1) Daily volume & value
                 daily_volume[day_key] += text_file['totalItems']
                 daily_value[day_key] += text_file['saleAmount']
 
-                # 2) Product volume
                 for product_id, qty in text_file['products'].items():
                     product_volume[product_id] += qty
 
-                # 3) Staff sales per month
                 staff_sales_month[(year, month, staff_id)] += text_file['saleAmount']
 
-                # 4) Hourly stats
                 hour_items_sold[hour] += text_file['totalItems']
                 hour_transaction_count[hour] += 1
 
@@ -126,25 +121,21 @@ def analyze_transaction_data(folder_path):
     # --- display results for each subfolder ---
     print(f"\n=== Results for folder: {folder_path} ===")
 
-    # 1) Highest sales volume in a day
     if max_volume_day is not None:
         print(f"1) Highest sales volume day: {max_volume_day} with volume={max_volume_value}")
     else:
         print("1) No data for daily volume.")
-
-    # 2) Highest sales value in a day
+        
     if max_value_day is not None:
         print(f"2) Highest sales value day: {max_value_day} with total value={max_value_amount:.2f}")
     else:
         print("2) No data for daily value.")
 
-    # 3) Most sold product by volume
     if max_product_id is not None:
         print(f"3) Most sold product: {max_product_id} with total quantity={max_product_qty}")
     else:
         print("3) No product data.")
 
-    # 4) Highest sales staff ID for each month
     print("4) Highest sales staff for each (year, month):")
     if monthly_staff_map:
         for (year, month) in sorted(monthly_staff_map.keys()):
@@ -155,7 +146,6 @@ def analyze_transaction_data(folder_path):
     else:
         print("   No staff sales data found.")
 
-    # 5) Highest hour of the day by average transaction volume
     if max_hour is not None:
         print(f"5) Highest hour by avg transaction volume: Hour={max_hour}, Avg={max_avg_volume:.2f}")
     else:
