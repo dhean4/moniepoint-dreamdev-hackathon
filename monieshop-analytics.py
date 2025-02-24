@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from collections import defaultdict
 
-def extra_products_details(products_str):
+def extract_products_details(products_str):
     inner = products_str.strip('[]')
     if not inner:
         return {}, 0
@@ -29,7 +29,7 @@ def format_transaction_record(line):
     sale_amount = float(sale_amount_str)
     transaction_time = datetime.fromisoformat(transaction_time_str) 
 
-    prod_dict, total_qty = extra_products_details(products_str)
+    prod_dict, total_qty = extract_products_details(products_str)
 
     return {
         'salesStaffId': sales_staff_id,
